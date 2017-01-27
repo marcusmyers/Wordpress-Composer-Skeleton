@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Create the default server config
+eval "cat > /etc/nginx/conf.d/wordpress.conf <<EOF
+$(</etc/nginx/wordpress.conf.tpl)
+EOF
+" 2> /dev/null
+
+exec /usr/sbin/nginx
