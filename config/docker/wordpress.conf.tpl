@@ -21,13 +21,7 @@ server {
   rewrite /wp-admin\$ \$scheme://\$host\$uri/ permanent;
 
   # Rewrite /status route to /status.php file.
-  # rewrite /status\$ /status.php last;
-
-  # Rewrite multisite '.../wp-.*' and '.../*.php'.
-  # if (!-e \$request_filename) {
-  #  rewrite ^/[_0-9a-zA-Z-]+(/wp-.*) \$1 last;
-  #  rewrite ^/[_0-9a-zA-Z-]+(/.*zA\.php)\$ \$1 last;
-  #}
+  rewrite /status\$ /status.php last;
 
   location ~ \\.php\$ {
     try_files \$uri =404;
@@ -36,8 +30,7 @@ server {
     include fastcgi_params;
     fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-    #fastcgi_param PHP_VALUE "auto_prepend_file=\\"/app/app/conf/config.inc.php\\"";
-    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_pass unix:/run/php/php7.0-fpm.sock;
   }
 
   # Deny access to any files with a .php extension in the uploads directory

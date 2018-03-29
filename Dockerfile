@@ -15,18 +15,17 @@ RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list &&
     rm /tmp/dotdeb.gpg && \
     apt-get update && \
     apt-get -y install \
-      php7.0-fpm \
-      php7.0-json \
-      php7.0-mysql \
-      php7.0-gd \
-      php7.0-curl \
+      php7.2-fpm \
+      php7.2-json \
+      php7.2-mysql \
+      php7.2-gd \
+      php7.2-curl \
       mysql-client \
       supervisor && \
     apt-get -q clean && \
     rm -rf /var/lib/apt/lists/*
 
 COPY config/docker/nginx.conf /etc/nginx/nginx.conf
-COPY config/docker/default.conf /etc/nginx/conf.d/default.conf
 COPY config/docker/wordpress.conf.tpl /etc/nginx/wordpress.conf.tpl
 COPY config/docker/start /etc/nginx/start
 COPY config/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

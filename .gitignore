@@ -1,5 +1,4 @@
 vendor
-composer.json
 *.DS_Store
 .env
 web/wp/*
