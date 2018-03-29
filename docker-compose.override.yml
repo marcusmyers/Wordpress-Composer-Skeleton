@@ -1,0 +1,45 @@
+version: '3.3'
+
+volumes:
+  db-data:
+    external: false
+  dump-data:
+    external: false
+
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_HOST:
+      MYSQL_DATABASE:
+      MYSQL_USERNAME:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "30001:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - dump-data:/tmp
+
+  app:
+    build: .
+    environment:
+      MYSQL_HOST:
+      MYSQL_DATABASE:
+      MYSQL_USERNAME:
+      MYSQL_PASSWORD:
+      WP_HOME:
+      WP_SITEURL:
+    volumes: &volumes
+      - .:/app
+    ports:
+      - "30000:80"
+    depends_on:
+      - db
+
+  cmd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    healthcheck:
+      disable: true
+    volumes: *volumes

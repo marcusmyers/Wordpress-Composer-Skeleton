@@ -1,28 +1,9 @@
-version: '2'
-
-volumes:
-  db-data:
-    external: false
-  dump-data:
-    external: false
+version: '3.3'
 
 services:
-  db:
-    image: mysql
-    environment:
-      MYSQL_HOST:
-      MYSQL_DATABASE:
-      MYSQL_USERNAME:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-    ports:
-      - "30001:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-      - dump-data:/tmp
-
   app:
-    build: .
-    environment:
+    image: $DOCKER_IMAGE
+    environment: &environment
       MYSQL_HOST:
       MYSQL_DATABASE:
       MYSQL_USERNAME:
@@ -33,5 +14,9 @@ services:
       - .:/app
     ports:
       - "30000:80"
-    depends_on:
-      - db
+
+  cmd:
+    image: $DOCKER_IMAGE
+    environment: *environment
+    healthcheck:
+      disable: true
