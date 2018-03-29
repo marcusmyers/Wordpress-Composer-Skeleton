@@ -23,7 +23,10 @@ RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list &&
       mysql-client \
       supervisor && \
     apt-get -q clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    echo "Install WP CLI globally" && \
+    curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x /usr/local/bin/wp
 
 COPY config/docker/nginx.conf /etc/nginx/nginx.conf
 COPY config/docker/wordpress.conf.tpl /etc/nginx/wordpress.conf.tpl
