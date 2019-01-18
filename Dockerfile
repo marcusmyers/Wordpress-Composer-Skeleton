@@ -1,9 +1,9 @@
 FROM nginx
 MAINTAINER Mark Myers <marcusmyers@gmail.com>
 
-ENV php_conf=/etc/php/7.0/fpm/php.ini \
-    fpm_conf=/etc/php/7.0/fpm/php-fpm.conf \
-    fpm_pool=/etc/php/7.0/fpm/pool.d/www.conf
+ENV php_conf=/etc/php/7.2/fpm/php.ini \
+    fpm_conf=/etc/php/7.2/fpm/php-fpm.conf \
+    fpm_pool=/etc/php/7.2/fpm/pool.d/www.conf
 
 EXPOSE 80
 
