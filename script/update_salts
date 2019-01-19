@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+require file_exists(__DIR__.'/vendor/autoload.php') ?  __DIR__.'/vendor/autoload.php' : __DIR__.'/../vendor/autoload.php';
+use Tightenco\Collect\Support\Collection;
+use Salaros\WordPress\SaltsGenerator;
+
+$env_file = file_exists(__DIR__.'/.env') ? __DIR__.'/.env' : __DIR__.'/../.env';
+
+$current_environment = Collection::make(file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+
+$config = $current_environment->flatMap(function ($item, $key) {
+  list($index,$value) = explode("=", $item);
+  return [$index => $value];
+});
+
+$merged = $config->merge(Collection::make(SaltsGenerator::generateSalts())->transform(function ($item) {
+  return preg_replace('/\s/','_',$item);
+}));
+
+if( file_exists($env_file.'.backup') ) {
+  unlink($env_file.'.backup');
+}
+
+copy($env_file, $env_file.'.backup');
+
+$fh = fopen($env_file, 'w');
+
+$merged->each( function ($item, $key) use ($fh) {
+  fwrite($fh, $key . "=" . $item . "\n");
+});
+
+fclose($fh);
