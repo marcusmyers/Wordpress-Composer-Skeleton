@@ -6,6 +6,8 @@ This WordPress package uses [composer](https://getcomposer.org) and
 ## Install
 
 ```
+echo "{}" > composer.json
+composer config repositories.repo-name composer https://https://wpackagist.org
 composer require marcusmyers/wordpress-skeleton
 ```
 
