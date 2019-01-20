@@ -6,9 +6,8 @@ This WordPress package uses [composer](https://getcomposer.org) and
 ## Install
 
 ```
-echo "{}" > composer.json
-composer config repositories.repo-name composer https://https://wpackagist.org
-composer require marcusmyers/wordpress-skeleton
+composer create-project marcusmyers/wordpress-skeleton
+<your-wordpress-site>
 ```
 
 ## Spinning up
@@ -22,3 +21,8 @@ docker-compose up -d
 
 Once it's done go to `http://localhost:30000` in your browser to get
 started.
+
+
+## Adding Themes and Plugins
+
+Search for themes and plugins at https://wpackagist.org.
