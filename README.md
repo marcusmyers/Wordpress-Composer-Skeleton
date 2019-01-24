@@ -6,8 +6,13 @@ This WordPress package uses [composer](https://getcomposer.org) and
 ## Install
 
 ```
-composer create-project marcusmyers/wordpress-skeleton
-<your-wordpress-site>
+composer create-project marcusmyers/wordpress-skeleton <your-wordpress-site>
+```
+
+## Initial Config
+
+```
+script/bootstrap
 ```
 
 ## Spinning up

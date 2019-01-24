@@ -1,0 +1,37 @@
+#!/bin/zsh -i
+
+main() {
+  setup_dependencies
+  setup_database
+}
+
+docker_compose() {
+  docker-compose $*
+}
+
+setup_dependencies() {
+  composer install
+}
+
+setup_database() {
+  read -q "REPLY?Do you want to reset your database? (y/n) "
+  echo
+  if [[ "$REPLY" == "y" ]]; then
+    docker_compose up -d db
+    docker_compose run --rm cmd sh -c 'mysql --execute="CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE"'
+  fi
+}
+
+initial_install() {
+  read -q "REPLY?Is this the first time setting up the app? (y/n) "
+  echo
+  if [[ "$REPLY" == "y" ]]; then
+    script/core_install
+  fi
+
+}
+echo "Begin Setting Up WordPress Site"
+
+main
+
+echo "Bootstrap Configuration Complete"

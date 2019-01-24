@@ -11,7 +11,7 @@ $webroot_dir = $root_dir . '/web';
 /**
  * Use Dotenv to set required getenvironment variables and load .env file in root
  */
-$dotenv = new Dotenv\Dotenv($root_dir);
+$dotenv = Dotenv\Dotenv::create($root_dir);
 if (file_exists($root_dir . '/.env')) {
     $dotenv->load();
     $dotenv->required(['MYSQL_DATABASE', 'MYSQL_USERNAME', 'MYSQL_PASSWORD', 'WP_HOME', 'WP_SITEURL']);

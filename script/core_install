@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+docker-compose run --rm cmd wp --allow-root core install --url='$WP_HOME' --title='Wordpress Site' --admin_user='admin' --admin_password=strongpassword --admin_email='dev@example.com'
