@@ -1,48 +1,19 @@
-FROM nginx
+FROM webdevops/php-nginx:ubuntu-18.04
 MAINTAINER Mark Myers <marcusmyers@gmail.com>
+HEALTHCHECK CMD curl -f http://localhost/status || exit 1
+STOPSIGNAL SIGKILL
 
-ENV php_conf=/etc/php/7.2/fpm/php.ini \
-    fpm_conf=/etc/php/7.2/fpm/php-fpm.conf \
-    fpm_pool=/etc/php/7.2/fpm/pool.d/www.conf
-
-EXPOSE 80
-
-ADD https://www.dotdeb.org/dotdeb.gpg /tmp/
-
-RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list && \
-    echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list && \
-    apt-key add /tmp/dotdeb.gpg && \
-    rm /tmp/dotdeb.gpg && \
-    apt-get update && \
-    apt-get -y install \
-      php7.2-fpm \
-      php7.2-json \
-      php7.2-mysql \
-      php7.2-gd \
-      php7.2-curl \
-      mysql-client \
-      supervisor && \
+ENV WEB_DOCUMENT_ROOT=/app/web
+RUN apt-get update && \
+    apt-get install -y mysql-client-5.7 tzdata locales && \
     apt-get -q clean && \
     rm -rf /var/lib/apt/lists/* && \
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+    ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata && \
     echo "Install WP CLI globally" && \
     curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x /usr/local/bin/wp
 
-COPY config/docker/nginx.conf /etc/nginx/nginx.conf
-COPY config/docker/wordpress.conf.tpl /etc/nginx/wordpress.conf.tpl
-COPY config/docker/start /etc/nginx/start
-COPY config/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# tweak php-fpm config
-RUN sed -i \
-        -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" \
-        ${php_conf} && \
-     sed -i \
-        -e "s/;daemonize\s*=\s*yes/daemonize = no/g" \
-        ${fpm_conf} && \
-     sed -i \
-        -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" \
-        -e "s/^;clear_env = no$/clear_env = no/" \
-        ${fpm_pool}
-
-CMD ["/usr/bin/supervisord"]
+COPY --chown=application:application . /app
+WORKDIR /app
